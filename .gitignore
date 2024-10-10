@@ -1,0 +1,26 @@
+Dependencies/Libraries/*
+!Dependencies/Libraries/.gitkeep
+out/
+
+# Visual Studio
+*.sln
+*.user
+*.suo
+.vs/
+
+# Visual Studio Code
+.vscode/
+CMakePresets.json
+
+# JetBrains IDEs (like CLion)
+.idea/
+*.iml
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.DS_Store
+Thumbs.db
+
+Build/
