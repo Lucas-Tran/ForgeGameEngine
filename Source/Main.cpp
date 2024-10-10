@@ -23,7 +23,13 @@ const char *fragmentShaderSource =
 const float vertices[] = {
     -0.5f, -0.5f, 0.0f,
      0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
+     0.5f,  0.5f, 0.0f,
+    -0.5f,  0.5f, 0.0f
+};
+
+const unsigned int elements[] = {
+    0, 1, 2,
+    0, 2, 3
 };
 
 int main() {
@@ -79,7 +85,7 @@ int main() {
     glDeleteShader(fragmentShader);
 
 
-    unsigned int VBO, VAO;
+    unsigned int VBO, VAO, EBO;
 
     // Generate vertex array object (VAO)
     glGenVertexArrays(1, &VAO);
@@ -90,6 +96,11 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    // Generate element buffer object (EBO) and uploading the element data to it
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+
     // Vertex attributes
 
     // Position
@@ -99,6 +110,7 @@ int main() {
     // Unbind
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
     // Set the clear color
@@ -112,7 +124,7 @@ int main() {
 
     // Draw triangle
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void *)(0));
     glBindVertexArray(0);
 
     // Swap the buffers to display our new back buffer
@@ -131,9 +143,10 @@ int main() {
     // Clean up shader program
     glDeleteProgram(shaderProgram);
 
-    // Clean up VBO and VAO
+    // Clean up VBO, VAO and EBO
     glDeleteBuffers(1, &VBO);
     glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &EBO);
 
     // Once this loop ended, make sure to destroy this window and terminate GLFW to remove all or it's allocated resources
     glfwDestroyWindow(window);
