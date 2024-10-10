@@ -26,7 +26,21 @@ int main() {
 
     // Set the current context of the thread to be this window
     glfwMakeContextCurrent(window);
+
+    // Attempt to initialize GLAD
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cerr << "Failed to initialize GLAD" << std::endl;
+        return 1;
+    }
     
+    // Set the clear color
+    glClearColor(0.1, 0.2, 0.3, 1.0f);
+
+    // Clear the color buffer
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Swap the buffers to display our new back buffer
+    glfwSwapBuffers(window);
     
     // Game Loop
     while (true) {

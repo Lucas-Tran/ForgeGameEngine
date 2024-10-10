@@ -29,4 +29,5 @@ Now we can start to build the main project itself!!!
 
 ## Change Log
 
+Version 0.2 - Added color to the window by using GLAD
 Version 0.1 - Created basic window program
