@@ -3,7 +3,7 @@
 
 ## Installation
 
-1. You need to download CMake. To do so, go to the this website to download [CMake](https://cmake.org/download/).
+1. You need to download CMake if you have not done so. To do so, go to the this website to download [CMake](https://cmake.org/download/).
 
 2. Launch CMake, then go to "Tools > How to Install For Command Line Use" and chose your way to install CMake for the command line.
 
@@ -29,6 +29,7 @@ Now we can start to build the main project itself!!!
 
 ## Change Log
 
+Version 0.5 - Abstracted OpenGL into classes
 Version 0.4 - Used an element buffer to display a quad
 Version 0.3 - Made a triangle appear on the window
 Version 0.2 - Added color to the window by using GLAD
