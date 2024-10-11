@@ -10,11 +10,15 @@
 #include <EBO.h>
 #include <VAO.h>
 
+// Texture 2D
+#include <Texture2D.h>
+
 const float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.5f,  0.5f, 0.0f,
-    -0.5f,  0.5f, 0.0f
+    //  POSITION                // TEXTURE COORDINATES
+    -0.5f, -0.5f, 0.0f,         0.0f, 0.0f,
+     0.5f, -0.5f, 0.0f,         1.0f, 0.0f,
+     0.5f,  0.5f, 0.0f,         1.0f, 1.0f,
+    -0.5f,  0.5f, 0.0f,         0.0f, 1.0f
 };
 
 const unsigned int elements[] = {
@@ -64,7 +68,8 @@ int main() {
 
     // Vertex attributes
     // And it is important to set the vertex attributes after the VBO creation is because the VAO needs to know which buffer this format is for
-    VAO::SetVertexAttribute(0, 3, 3, 0); // Position
+    VAO::SetVertexAttribute(0, 3, 5, 0); // Position
+    VAO::SetVertexAttribute(1, 2, 5, 3); // Position
 
     EBO EBO(elements, sizeof(elements));
 
@@ -73,6 +78,9 @@ int main() {
     VAO::Unbind();
     VBO::Unbind();
     EBO::Unbind();
+
+    Texture2D texture("Textures/GrassBlock.png", 0, GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST);
+
 
 
     // Set the clear color
@@ -83,6 +91,7 @@ int main() {
 
     // Activate shader
     shaderProgram.Activate();
+    texture.Uniform(shaderProgram, "texture_0");
 
     // Draw triangle
     VAO.Bind();

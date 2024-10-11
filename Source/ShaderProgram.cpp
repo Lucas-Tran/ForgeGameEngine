@@ -27,21 +27,55 @@ unsigned int CompileShader(const std::string shaderPath, unsigned int shaderType
     glShaderSource(shader, 1, &source, nullptr);
     glCompileShader(shader);
 
+    // Check for errors
+    int sucess;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &sucess);
+
+    if (!sucess) {
+        // Get the shader info log and print out the error. Returning 0 means that it failed.
+        char infoLog[512];
+        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+        std::string type = (shaderType == GL_VERTEX_SHADER) ? "VERTEX" : "FRAGMENT";
+        std::cout << "ERROR::SHADER::" << type << "::COMPILATION::FAILED: " << shaderPath << std::endl;
+        std::cout << infoLog << std::endl;
+        return 0;
+    }
+
     // Return the compiled shader
     return shader;
 }
 
-ShaderProgram::ShaderProgram(const std::string vertexShaderPath, const std::string fragmentShaderPath): ID(glCreateProgram()) /*    The ID is going to be the ID of a new program   */ {
+ShaderProgram::ShaderProgram(const std::string vertexShaderPath, const std::string fragmentShaderPath) {
     // Create and compile the vertex shader
     unsigned int vertexShader = CompileShader(vertexShaderPath, GL_VERTEX_SHADER);
 
     // Create and compile the fragment shader
     unsigned int fragmentShader = CompileShader(fragmentShaderPath, GL_FRAGMENT_SHADER);
 
+    // Check if there are any errors
+    if (vertexShader == 0 || fragmentShader == 0) {
+        ID = 0;
+        return;
+    }
+
+    // Create the program
+    ID = glCreateProgram();
+
     // Attatch shaders to program and link it
     glAttachShader(ID, vertexShader);
     glAttachShader(ID, fragmentShader);
     glLinkProgram(ID);
+
+    int success;
+    glGetProgramiv(ID, GL_LINK_STATUS, &success);
+    if (!success) {
+        char infoLog[512];
+        glGetProgramInfoLog(ID, 512, nullptr, infoLog);
+        std::cout << "ERROR::SHADER::PROGRAM::LINKING::FAILED" << std::endl;
+        std::cout << infoLog << std::endl;
+        ID = 0;
+        return;
+    }
 
     // Delete the shaders since they are no longer in the program
     glDeleteShader(vertexShader);
@@ -56,4 +90,13 @@ ShaderProgram::~ShaderProgram() {
 void ShaderProgram::Activate() const {
     // A method for activating the shader program
     glUseProgram(ID);
+}
+
+void ShaderProgram::SetUniform(const std::string uniformName, int value) const {
+    // We get the uniform location using the program ID and the uniform name and set it to our value
+    glUniform1i(glGetUniformLocation(ID, uniformName.c_str()), value);
+}
+
+bool ShaderProgram::Success() {
+    return ID != 0;
 }

@@ -29,6 +29,7 @@ Now we can start to build the main project itself!!!
 
 ## Change Log
 
+Version 0.6 - Added textures and shader errors
 Version 0.5 - Abstracted OpenGL into classes
 Version 0.4 - Used an element buffer to display a quad
 Version 0.3 - Made a triangle appear on the window

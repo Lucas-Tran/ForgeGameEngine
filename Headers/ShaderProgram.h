@@ -10,8 +10,12 @@ public:
     ~ShaderProgram();
 
     void Activate() const;
+
+    void SetUniform(const std::string uniformName, int value) const;
+
+    bool Success();
 private:
-    const unsigned int ID;
+    unsigned int ID;
 };
 
 #endif
