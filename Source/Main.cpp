@@ -18,15 +18,60 @@
 
 const float vertices[] = {
     //  POSITION                // TEXTURE COORDINATES
-    -0.5f, -0.5f, 0.0f,         0.0f, 0.0f,
-     0.5f, -0.5f, 0.0f,         1.0f, 0.0f,
-     0.5f,  0.5f, 0.0f,         1.0f, 1.0f,
-    -0.5f,  0.5f, 0.0f,         0.0f, 1.0f
+     0.5f, -0.5f, -0.5f,         0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,         1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,         1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,         0.0f, 1.0f,
+
+
+    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,         1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,         1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,         0.0f, 1.0f,
+
+
+    -0.5f, -0.5f,  0.5f,         0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,         1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,         1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,         0.0f, 1.0f,
+
+
+     0.5f, -0.5f,  0.5f,         0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,         1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,         1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,         0.0f, 1.0f,
+
+
+    -0.5f,  0.5f,  0.5f,         0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,         1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,         1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,         0.0f, 1.0f,
+
+
+    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,         1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,         1.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,         0.0f, 1.0f,
 };
 
 const unsigned int elements[] = {
     0, 1, 2,
-    0, 2, 3
+    0, 2, 3,
+
+    4, 5, 6,
+    4, 6, 7,
+
+    8, 9, 10,
+    8, 10, 11,
+
+    12, 13, 14,
+    12, 14, 15,
+
+    16, 17, 18,
+    16, 18, 19,
+
+    20, 21, 22,
+    20, 22, 23
 };
 
 int main() {
@@ -45,7 +90,7 @@ int main() {
 #endif
 
     // Attempt to create window
-    GLFWwindow *window = glfwCreateWindow(500, 500, "Hello Quad", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(500, 500, "Hello Cube", nullptr, nullptr);
     if (window == nullptr) {
         std::cerr << "Failed to create window!" << std::endl;
         return 1;
@@ -59,6 +104,9 @@ int main() {
         std::cerr << "Failed to initialize GLAD" << std::endl;
         return 1;
     }
+
+    glEnable(GL_DEPTH_TEST); // Enable depth testing
+    glEnable(GL_CULL_FACE); // Enable face culling
 
     ShaderProgram shaderProgram("Shaders/default.VS", "Shaders/default.FS");
 
@@ -82,7 +130,7 @@ int main() {
     VBO::Unbind();
     EBO::Unbind();
 
-    Texture2D texture("Textures/GrassBlock.png", 0, GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST);
+    Texture2D texture("Textures/GrassBlock.png", 0, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST);
 
     const float NEAR = 0.1f, FAR = 1000.0f;
     int width, height;
@@ -107,7 +155,7 @@ int main() {
         
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
 
         shaderProgram.SetUniform("model", model);
 
@@ -115,11 +163,11 @@ int main() {
         glClearColor(0.1, 0.2, 0.3, 1.0f);
 
         // Clear the color buffer
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Draw triangle
         VAO.Bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void *)(0));
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void *)(0));
         VAO::Unbind();
         
         // Swap the buffers to display our new back buffer
