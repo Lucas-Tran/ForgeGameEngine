@@ -13,6 +13,9 @@
 // Texture 2D
 #include <Texture2D.h>
 
+// For easy matrix transformations
+#include <glm/gtc/matrix_transform.hpp>
+
 const float vertices[] = {
     //  POSITION                // TEXTURE COORDINATES
     -0.5f, -0.5f, 0.0f,         0.0f, 0.0f,
@@ -69,7 +72,7 @@ int main() {
     // Vertex attributes
     // And it is important to set the vertex attributes after the VBO creation is because the VAO needs to know which buffer this format is for
     VAO::SetVertexAttribute(0, 3, 5, 0); // Position
-    VAO::SetVertexAttribute(1, 2, 5, 3); // Position
+    VAO::SetVertexAttribute(1, 2, 5, 3); // Texture coordinates
 
     EBO EBO(elements, sizeof(elements));
 
@@ -81,25 +84,16 @@ int main() {
 
     Texture2D texture("Textures/GrassBlock.png", 0, GL_REPEAT, GL_REPEAT, GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST);
 
-
-
-    // Set the clear color
-    glClearColor(0.1, 0.2, 0.3, 1.0f);
-
-    // Clear the color buffer
-    glClear(GL_COLOR_BUFFER_BIT);
+    const float NEAR = 0.1f, FAR = 1000.0f;
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    glm::mat4 projection = glm::perspective(glm::radians(60.0f), (float)width/height, NEAR, FAR);
 
     // Activate shader
     shaderProgram.Activate();
-    texture.Uniform(shaderProgram, "texture_0");
 
-    // Draw triangle
-    VAO.Bind();
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void *)(0));
-    VAO::Unbind();
-
-    // Swap the buffers to display our new back buffer
-    glfwSwapBuffers(window);
+    texture.Uniform(shaderProgram, "texture_0"); // Uniform Texture
+    shaderProgram.SetUniform("projection", projection); // Uniform Projection matrix
 
     // Game Loop
     while (true) {
@@ -110,6 +104,26 @@ int main() {
         if (glfwWindowShouldClose(window)) {
             break;
         }
+        
+        glm::mat4 model(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        shaderProgram.SetUniform("model", model);
+
+        // Set the clear color
+        glClearColor(0.1, 0.2, 0.3, 1.0f);
+
+        // Clear the color buffer
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Draw triangle
+        VAO.Bind();
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void *)(0));
+        VAO::Unbind();
+        
+        // Swap the buffers to display our new back buffer
+        glfwSwapBuffers(window);
     }
 
     // Once this loop ended, make sure to destroy this window and terminate GLFW to remove all or it's allocated resources

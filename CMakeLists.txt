@@ -1,14 +1,17 @@
 cmake_minimum_required(VERSION 3.5.0)
-project(ForgeEngine VERSION 0.6 LANGUAGES C CXX)
+project(ForgeEngine VERSION 0.7 LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 20)
 
 
-include_directories(${CMAKE_SOURCE_DIR}/Dependencies/Include ${CMAKE_SOURCE_DIR}/Headers)
+include_directories(${CMAKE_SOURCE_DIR}/Dependencies/Headers ${CMAKE_SOURCE_DIR}/Headers)
 link_directories(${CMAKE_SOURCE_DIR}/Dependencies/Libraries)
 
-file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/Source/*.cpp ${CMAKE_SOURCE_DIR}/Source/*.c)
+file(GLOB_RECURSE SOURCE_FILES 
+    ${CMAKE_SOURCE_DIR}/Source/*.cpp ${CMAKE_SOURCE_DIR}/Source/*.c
+    ${CMAKE_SOURCE_DIR}/Dependencies/Source/*.cpp ${CMAKE_SOURCE_DIR}/Dependencies/Source/*.c
+)
 
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
 

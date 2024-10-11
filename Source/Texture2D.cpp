@@ -43,10 +43,10 @@ Texture2D::~Texture2D() {
     glDeleteTextures(1, &ID);
 }
 
-void Texture2D::Uniform(ShaderProgram &shaderProgram, const std::string uniformName) {
-    shaderProgram.SetUniform(uniformName, textureSlot);
+bool Texture2D::Success() const {
+    return ID != 0;
 }
 
-bool Texture2D::Success() {
-    return ID != 0;
+void Texture2D::Uniform(ShaderProgram &shaderProgram, const std::string uniformName) const {
+    shaderProgram.SetUniform(uniformName, textureSlot);
 }

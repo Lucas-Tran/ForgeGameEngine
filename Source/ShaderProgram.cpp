@@ -5,6 +5,8 @@
 #include <sstream>
 #include <glad/glad.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 std::string ReadFileContents(const std::string path) {
     // Create a filestream for the desired file
     std::ifstream fileStream("Resources/" + path);
@@ -87,16 +89,48 @@ ShaderProgram::~ShaderProgram() {
     glDeleteProgram(ID);
 }
 
+bool ShaderProgram::Success() const {
+    return ID != 0;
+}
+
 void ShaderProgram::Activate() const {
     // A method for activating the shader program
     glUseProgram(ID);
 }
 
+// For these functions, we get the uniform location using the program ID and the uniform name and set it to our value
+    
 void ShaderProgram::SetUniform(const std::string uniformName, int value) const {
-    // We get the uniform location using the program ID and the uniform name and set it to our value
     glUniform1i(glGetUniformLocation(ID, uniformName.c_str()), value);
 }
 
-bool ShaderProgram::Success() {
-    return ID != 0;
+void ShaderProgram::SetUniform(const std::string uniformName, float value) const {
+    glUniform1f(glGetUniformLocation(ID, uniformName.c_str()), value);
+}
+
+// For these functions, we use "type_ptr" because these accept the pointers to arrays of values
+
+void ShaderProgram::SetUniform(const std::string uniformName, glm::vec2 value) const {
+    glUniform2fv(glGetUniformLocation(ID, uniformName.c_str()), 1, glm::value_ptr(value));
+}
+
+void ShaderProgram::SetUniform(const std::string uniformName, glm::vec3 value) const {
+    glUniform3fv(glGetUniformLocation(ID, uniformName.c_str()), 1, glm::value_ptr(value));
+}
+
+void ShaderProgram::SetUniform(const std::string uniformName, glm::vec4 value) const {
+    glUniform4fv(glGetUniformLocation(ID, uniformName.c_str()), 1, glm::value_ptr(value));
+}
+
+
+void ShaderProgram::SetUniform(const std::string uniformName, glm::mat2 value) const {
+    glUniformMatrix2fv(glGetUniformLocation(ID, uniformName.c_str()), 1, false, glm::value_ptr(value));
+}
+
+void ShaderProgram::SetUniform(const std::string uniformName, glm::mat3 value) const {
+    glUniformMatrix3fv(glGetUniformLocation(ID, uniformName.c_str()), 1, false, glm::value_ptr(value));
+}
+
+void ShaderProgram::SetUniform(const std::string uniformName, glm::mat4 value) const {
+    glUniformMatrix4fv(glGetUniformLocation(ID, uniformName.c_str()), 1, false, glm::value_ptr(value));
 }

@@ -10,12 +10,12 @@ public:
 
     ~Texture2D();
 
-    void Uniform(ShaderProgram &shaderProgram, const std::string uniformName);
+    bool Success() const;
 
-    bool Success();
+    void Uniform(ShaderProgram &shaderProgram, const std::string uniformName) const;
 private:
     unsigned int ID;
-    const unsigned int textureSlot;
+    const int textureSlot;
 };
 
 #endif
