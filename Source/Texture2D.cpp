@@ -11,11 +11,10 @@ Texture2D::Texture2D(const std::string path, const unsigned int textureSlot, con
     glActiveTexture(GL_TEXTURE0 + textureSlot);
     glBindTexture(GL_TEXTURE_2D, ID);
 
-    // We get the full path and load the image recording the width, height, and channels
-    std::string fullPath = "Resources/" + path;
+    // We load the image recording the width, height, and channels
     int width, height, channels;
     stbi_set_flip_vertically_on_load(true); // This is because stbi loads the images flipped by default
-    unsigned char *data = stbi_load(fullPath.c_str(), &width, &height, &channels, 0);
+    unsigned char *data = stbi_load(path.c_str(), &width, &height, &channels, 0);
     if (data) {
         // This means we successfully loaded in the image
         unsigned int format = (channels == 3) ? GL_RGB : GL_RGBA;

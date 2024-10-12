@@ -23,4 +23,4 @@ if (APPLE)
     target_link_libraries(${CMAKE_PROJECT_NAME} "-framework Cocoa" "-framework IOKit")
 endif()
 
-file(COPY ${CMAKE_SOURCE_DIR}/Resources DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/Resources/ DESTINATION ${CMAKE_BINARY_DIR})

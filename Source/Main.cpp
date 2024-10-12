@@ -16,6 +16,9 @@
 // For easy matrix transformations
 #include <glm/gtc/matrix_transform.hpp>
 
+// Camera
+#include <Camera.h>
+
 const float vertices[] = {
     //  POSITION                // TEXTURE COORDINATES
      0.5f, -0.5f, -0.5f,         0.0f, 0.0f,
@@ -74,6 +77,12 @@ const unsigned int elements[] = {
     20, 22, 23
 };
 
+bool firstFrame = true;
+
+float currentTime;
+float currentMouseX;
+float currentMouseY;
+
 int main() {
     // Attempt to initialize GLFW
     if (!glfwInit()) {
@@ -90,7 +99,7 @@ int main() {
 #endif
 
     // Attempt to create window
-    GLFWwindow *window = glfwCreateWindow(500, 500, "Hello Cube", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(500, 500, "Hello Camera", nullptr, nullptr);
     if (window == nullptr) {
         std::cerr << "Failed to create window!" << std::endl;
         return 1;
@@ -107,6 +116,8 @@ int main() {
 
     glEnable(GL_DEPTH_TEST); // Enable depth testing
     glEnable(GL_CULL_FACE); // Enable face culling
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     ShaderProgram shaderProgram("Shaders/default.VS", "Shaders/default.FS");
 
@@ -135,13 +146,13 @@ int main() {
     const float NEAR = 0.1f, FAR = 1000.0f;
     int width, height;
     glfwGetWindowSize(window, &width, &height);
-    glm::mat4 projection = glm::perspective(glm::radians(60.0f), (float)width/height, NEAR, FAR);
+    Camera camera(glm::vec3(0), 0, 0, 60, width, height, NEAR, FAR);
 
     // Activate shader
     shaderProgram.Activate();
 
     texture.Uniform(shaderProgram, "texture_0"); // Uniform Texture
-    shaderProgram.SetUniform("projection", projection); // Uniform Projection matrix
+    shaderProgram.SetUniform("projection", camera.GetProjectionMatrix()); // Uniform Projection matrix
 
     // Game Loop
     while (true) {
@@ -149,9 +160,27 @@ int main() {
         glfwPollEvents();
         
         // If the window needs to close, break out of this loop
-        if (glfwWindowShouldClose(window)) {
+        if (glfwWindowShouldClose(window) || (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)) {
             break;
         }
+
+        float previousTime = currentTime;
+        currentTime = glfwGetTime();
+        float deltaTime = firstFrame ? 0 : (currentTime - previousTime);
+
+        float previousMouseX = currentMouseX;
+        float previousMouseY = currentMouseY;
+        double outputMouseX, outputMouseY;
+        glfwGetCursorPos(window, &outputMouseX, &outputMouseY);
+        currentMouseX = outputMouseX;
+        currentMouseY = -outputMouseY;
+        float deltaMouseX = firstFrame ? 0 : (currentMouseX - previousMouseX);
+        float deltaMouseY = firstFrame ? 0 : (currentMouseY - previousMouseY);
+
+        firstFrame = false;
+
+        camera.Update(window, deltaTime, deltaMouseX, deltaMouseY);
+        shaderProgram.SetUniform("view", camera.GetViewMatrix());
         
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));

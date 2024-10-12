@@ -9,7 +9,7 @@
 
 std::string ReadFileContents(const std::string path) {
     // Create a filestream for the desired file
-    std::ifstream fileStream("Resources/" + path);
+    std::ifstream fileStream(path);
 
     // Create a stringstream to read the file buffer contents
     std::ostringstream stringStream;

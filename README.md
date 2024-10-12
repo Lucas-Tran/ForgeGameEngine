@@ -29,6 +29,7 @@ Now we can start to build the main project itself!!!
 
 ## Change Log
 
+Version 0.9 - Made a first person controller
 Version 0.8 - Made a cube
 Version 0.7 - Added 3D projection and made the quad spinning
 Version 0.6 - Added textures and shader errors
