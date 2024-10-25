@@ -19,6 +19,9 @@
 // Camera
 #include <Camera.h>
 
+// Engine
+#include <ForgeEngine.h>
+
 const float vertices[] = {
     //  POSITION                // TEXTURE COORDINATES
      0.5f, -0.5f, -0.5f,         0.0f, 0.0f,
@@ -76,12 +79,6 @@ const unsigned int elements[] = {
     20, 21, 22,
     20, 22, 23
 };
-
-bool firstFrame = true;
-
-float currentTime;
-float currentMouseX;
-float currentMouseY;
 
 int main() {
     // Attempt to initialize GLFW
@@ -164,22 +161,10 @@ int main() {
             break;
         }
 
-        float previousTime = currentTime;
-        currentTime = glfwGetTime();
-        float deltaTime = firstFrame ? 0 : (currentTime - previousTime);
+        UpdateProgramState(window);
+        
 
-        float previousMouseX = currentMouseX;
-        float previousMouseY = currentMouseY;
-        double outputMouseX, outputMouseY;
-        glfwGetCursorPos(window, &outputMouseX, &outputMouseY);
-        currentMouseX = outputMouseX;
-        currentMouseY = -outputMouseY;
-        float deltaMouseX = firstFrame ? 0 : (currentMouseX - previousMouseX);
-        float deltaMouseY = firstFrame ? 0 : (currentMouseY - previousMouseY);
-
-        firstFrame = false;
-
-        camera.Update(window, deltaTime, deltaMouseX, deltaMouseY);
+        camera.Update();
         shaderProgram.SetUniform("view", camera.GetViewMatrix());
         
         glm::mat4 model(1.0f);

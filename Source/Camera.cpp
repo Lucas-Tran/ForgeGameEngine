@@ -1,5 +1,8 @@
 #include <Camera.h>
 
+#include <ForgeEngine.h>
+using namespace ProgramState;
+
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
@@ -43,9 +46,9 @@ glm::mat4 Camera::GetViewMatrix() {
     return viewMatrix;
 }
 
-void Camera::Update(GLFWwindow *window, const float deltaTime, const float deltaMouseX, const float deltaMouseY) {
-    yaw -= deltaMouseX * SENSITIVITY;
-    pitch += deltaMouseY * SENSITIVITY;
+void Camera::Update() {
+    yaw -= Input::Mouse::deltaMouseX * SENSITIVITY;
+    pitch += Input::Mouse::deltaMouseY * SENSITIVITY;
     if (pitch > 89.0f) {
         pitch = 89.0f;
     } else if (pitch < -89.0f) {
@@ -55,23 +58,24 @@ void Camera::Update(GLFWwindow *window, const float deltaTime, const float delta
     UpdateDirectionVectors();
 
 
-    const float speed = 5 * deltaTime;
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    const float speed = SPEED * Time::deltaTime;
+    if (Input::Keyboard::keys[GLFW_KEY_W].pressed) {
         position += forward * speed;
     }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    std::cout << 5 * Time::deltaTime << std::endl;
+    if (Input::Keyboard::keys[GLFW_KEY_S].pressed) {
         position -= forward * speed;
     }
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+    if (Input::Keyboard::keys[GLFW_KEY_Q].pressed) {
         position -= up * speed;
     }
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+    if (Input::Keyboard::keys[GLFW_KEY_E].pressed) {
         position += up * speed;
     }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    if (Input::Keyboard::keys[GLFW_KEY_A].pressed) {
         position -= right * speed;
     }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    if (Input::Keyboard::keys[GLFW_KEY_D].pressed) {
         position += right * speed;
     }
 

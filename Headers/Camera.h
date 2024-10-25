@@ -20,7 +20,7 @@ public:
 
     glm::mat4 GetViewMatrix();
 
-    void Update(GLFWwindow *window, const float deltaTime, const float deltaMouseX, const float deltaMouseY);
+    void Update();
 private:
     // Position
     glm::vec3 position;
