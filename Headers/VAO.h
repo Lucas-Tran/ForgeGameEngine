@@ -12,7 +12,7 @@ public:
     static void Unbind();
 
     // This method is static because OpenGL is a state machine
-    static void SetVertexAttribute(const unsigned int location, const unsigned int numberOfValuesPerAttrib, const unsigned int numberOfValuesPerVertex, const unsigned int numberOfValuesToAttrib);
+    static void SetVertexAttribute(const unsigned int location, const unsigned int attribSize, const unsigned int stride, const unsigned int depth);
 private:
     unsigned int ID;
 };

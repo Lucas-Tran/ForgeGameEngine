@@ -20,6 +20,10 @@ public:
 
     glm::mat4 GetViewMatrix();
 
+    glm::vec3 GetPos();
+
+    glm::vec3 GetForwardVector();
+
     void Update();
 private:
     // Position

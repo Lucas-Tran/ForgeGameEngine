@@ -22,43 +22,53 @@
 // Engine
 #include <ForgeEngine.h>
 
-const float vertices[] = {
-    //  POSITION                // TEXTURE COORDINATES
-     0.5f, -0.5f, -0.5f,         0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,         1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,         1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,         0.0f, 1.0f,
+// Lights
+#include <DirectionalLight.h>
+#include <PointLight.h>
+#include <SpotLight.h>
 
+// Material
+#include <Material.h>
 
-    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,         1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,         1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,         0.0f, 1.0f,
+float vertices[] = {
+    //  POSITION                // TEXTURE COORDS   // NORMALS (Facing direction)
+    // Back Face (Facing straight down the negative Z-axis)
+     0.5f, -0.5f, -0.5f,         0.0f, 0.0f,         0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,         1.0f, 0.0f,         0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,         1.0f, 1.0f,         0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,         0.0f, 1.0f,         0.0f,  0.0f, -1.0f,
 
+    // Left Face (Facing straight down the negative X-axis)
+    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f,        -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,         1.0f, 0.0f,        -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,         1.0f, 1.0f,        -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,         0.0f, 1.0f,        -1.0f,  0.0f,  0.0f,
 
-    -0.5f, -0.5f,  0.5f,         0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,         1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,         1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,         0.0f, 1.0f,
+    // Front Face (Facing straight down the positive Z-axis)
+    -0.5f, -0.5f,  0.5f,         0.0f, 0.0f,         0.0f,  0.0f,  1.0f,
+     0.5f, -0.5f,  0.5f,         1.0f, 0.0f,         0.0f,  0.0f,  1.0f,
+     0.5f,  0.5f,  0.5f,         1.0f, 1.0f,         0.0f,  0.0f,  1.0f,
+    -0.5f,  0.5f,  0.5f,         0.0f, 1.0f,         0.0f,  0.0f,  1.0f,
 
+    // Right Face (Facing straight down the positive X-axis)
+     0.5f, -0.5f,  0.5f,         0.0f, 0.0f,         1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,         1.0f, 0.0f,         1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,         1.0f, 1.0f,         1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,         0.0f, 1.0f,         1.0f,  0.0f,  0.0f,
 
-     0.5f, -0.5f,  0.5f,         0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,         1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,         1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,         0.0f, 1.0f,
+    // Top Face (Facing straight up the positive Y-axis)
+    -0.5f,  0.5f,  0.5f,         0.0f, 0.0f,         0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,         1.0f, 0.0f,         0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,         1.0f, 1.0f,         0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,         0.0f, 1.0f,         0.0f,  1.0f,  0.0f,
 
-
-    -0.5f,  0.5f,  0.5f,         0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,         1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,         1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,         0.0f, 1.0f,
-
-
-    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,         1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,         1.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,         0.0f, 1.0f,
+    // Bottom Face (Facing straight down the negative Y-axis)
+    -0.5f, -0.5f, -0.5f,         0.0f, 0.0f,         0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,         1.0f, 0.0f,         0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,         1.0f, 1.0f,         0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,         0.0f, 1.0f,         0.0f, -1.0f,  0.0f
 };
+
 
 const unsigned int elements[] = {
     0, 1, 2,
@@ -127,8 +137,9 @@ int main() {
 
     // Vertex attributes
     // And it is important to set the vertex attributes after the VBO creation is because the VAO needs to know which buffer this format is for
-    VAO::SetVertexAttribute(0, 3, 5, 0); // Position
-    VAO::SetVertexAttribute(1, 2, 5, 3); // Texture coordinates
+    VAO::SetVertexAttribute(0, 3, 8, 0); // Position
+    VAO::SetVertexAttribute(1, 2, 8, 3); // Texture coordinates
+    VAO::SetVertexAttribute(2, 3, 8, 5); // Normal coordinates
 
     EBO EBO(elements, sizeof(elements));
 
@@ -138,18 +149,56 @@ int main() {
     VBO::Unbind();
     EBO::Unbind();
 
-    Texture2D texture("Textures/GrassBlock.png", 0, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST);
+    // Activate shader
+    shaderProgram.Activate();
 
     const float NEAR = 0.1f, FAR = 1000.0f;
     int width, height;
     glfwGetWindowSize(window, &width, &height);
-    Camera camera(glm::vec3(0), 0, 0, 60, width, height, NEAR, FAR);
-
-    // Activate shader
-    shaderProgram.Activate();
-
-    texture.Uniform(shaderProgram, "texture_0"); // Uniform Texture
+    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), 0, 0, 60, width, height, NEAR, FAR);
     shaderProgram.SetUniform("projection", camera.GetProjectionMatrix()); // Uniform Projection matrix
+
+    Texture2D diffuseTexture("Textures/container2.png", 0, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+    Texture2D specularTexture("Textures/container2_specular.png", 1, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+    Texture2D white1x1("Textures/white1x1.png", 2, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+
+    Material boxMaterial {diffuseTexture, specularTexture, 32.0f};
+    Material lightMaterial {white1x1, white1x1, 32.0f};
+
+    DirectionalLight directionalLight(
+        glm::vec3(0.0f, -1.0f, -1.0f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f)
+    );
+    directionalLight.Uniform(shaderProgram, "dirLights[0]");
+
+    PointLight pointLight(
+        glm::vec3(0.0f),
+        1.0f,
+        0.09f,
+        0.032f,
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f)
+    );
+    pointLight.Uniform(shaderProgram, "pointLights[0]");
+
+
+    SpotLight spotlight(
+        glm::vec3(0.0f),
+        glm::vec3(0.0f),
+        12.5f,
+        17.5f,
+        1.0f,
+        0.09f,
+        0.032f,
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f)
+    );
+
+    glm::vec3 lightPosition(0.0f, 4.0f, 0.0f);
 
     // Game Loop
     while (true) {
@@ -165,19 +214,43 @@ int main() {
         
 
         camera.Update();
+        shaderProgram.SetUniform("viewPos", camera.GetPos());
         shaderProgram.SetUniform("view", camera.GetViewMatrix());
-        
-        glm::mat4 model(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
 
-        shaderProgram.SetUniform("model", model);
+        // Flashlight example: Attach to camera vectors
+        spotlight.SetPosition(camera.GetPos());
+        spotlight.SetForward(camera.GetForwardVector());
+        spotlight.Uniform(shaderProgram, "spotLights[0]");
+        
+        float theta = glfwGetTime();
+        lightPosition.x = 4.0f * cos(theta);
+        lightPosition.z = 4.0f * sin(theta);
+        pointLight.SetPosition(lightPosition);
+        pointLight.Uniform(shaderProgram, "pointLights[0]");
 
         // Set the clear color
         glClearColor(0.1, 0.2, 0.3, 1.0f);
 
         // Clear the color buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        // The box
+        glm::mat4 model(1.0f);
+        model = glm::scale(model, glm::vec3(4.0f));
+
+        shaderProgram.SetUniform("model", model);
+        boxMaterial.Uniform(shaderProgram, "material");
+
+        VAO.Bind();
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void *)(0));
+        VAO::Unbind();
+        
+        // The light
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPosition);
+
+        shaderProgram.SetUniform("model", model);
+        lightMaterial.Uniform(shaderProgram, "material");
 
         // Draw triangle
         VAO.Bind();

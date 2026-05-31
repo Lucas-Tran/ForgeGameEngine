@@ -8,7 +8,7 @@ using namespace ProgramState;
 #include <iostream>
 
 const float SPEED = 5.0f;
-const float SENSITIVITY = 1.0f;
+const float SENSITIVITY = 0.1f;
 
 Camera::Camera(const glm::vec3 position, const float yaw, const float pitch, const float FOV, const int viewportWidth, const int viewportHeight, const float near, const float far): position(position), yaw(yaw), pitch(pitch) {
     SetProjectionMatrix(FOV, viewportWidth, viewportHeight, near, far);
@@ -62,7 +62,6 @@ void Camera::Update() {
     if (Input::Keyboard::keys[GLFW_KEY_W].pressed) {
         position += forward * speed;
     }
-    std::cout << 5 * Time::deltaTime << std::endl;
     if (Input::Keyboard::keys[GLFW_KEY_S].pressed) {
         position -= forward * speed;
     }
@@ -80,4 +79,12 @@ void Camera::Update() {
     }
 
     UpdateViewMatrix();
+}
+
+glm::vec3 Camera::GetPos() {
+    return position;
+}
+
+glm::vec3 Camera::GetForwardVector() {
+    return forward;
 }
